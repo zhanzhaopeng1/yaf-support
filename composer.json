@@ -1,0 +1,34 @@
+{
+    "name": "sixiaoqi/yaf-support",
+    "description": "基于yaf框架和IOC容器思想实现的二次开发",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "zhaopeng",
+            "email": "zhaopeng156@126.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "files": [
+            "src/Foundation/helpers.php"
+        ],
+        "psr-4": {
+            "Yaf\\Support\\": "src/",
+            "Yaf\\Support\\Test\\": "tests/"
+
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    ],
+    "require": {
+        "illuminate/pipeline": "^7.6",
+        "pimple/pimple": "^3.3@dev",
+        "phpunit/phpunit": "8.5.x-dev"
+    }
+}
