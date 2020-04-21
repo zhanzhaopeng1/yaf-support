@@ -1,6 +1,10 @@
 <?php
 define('YAF_CONFIG_KEY', 'yaf_config_key');
 
+use Illuminate\Support\Str;
+use Yaf\Support\Database\Database;
+use Yaf\Support\Foundation\Application;
+
 if (!function_exists('app')) {
     /**
      * Get the available container instance.
@@ -10,6 +14,10 @@ if (!function_exists('app')) {
      */
     function app($abstract = null)
     {
+        if (Yaf_Registry::get('app') === null) {
+            Yaf_Registry::set('app', new Application([], realpath(dirname(__FILE__))));
+        }
+
         if (is_null($abstract)) {
             return Yaf_Registry::get('app');
         }
@@ -27,7 +35,8 @@ if (!function_exists('config')) {
      * If an array is passed as the key, we will assume you want to set an array of values.
      *
      * @param string $namespace
-     * @return mixed|Yaf_Config_Abstract|Yaf_Config_Ini
+     * @param string $configFilePath
+     * @return mixed|Yaf_Config_Abstract|Yaf_Config_Ini|Yaf_Config_Simple
      */
     function config($namespace = 'application')
     {
@@ -36,9 +45,11 @@ if (!function_exists('config')) {
             $config = Yaf_Registry::get($key);
             if ($config == null) {
                 $configPath = app()->getNamespaceConfigPath($namespace);
-                $config     = Yaf_Application::app() == null ?
-                    new Yaf_Config_Ini($configPath, ini_get('yaf.environ'))
-                    : Yaf_Application::app()->getConfig();
+                if (Str::contains($configPath, 'ini')) {
+                    $config = new Yaf_Config_Ini($configPath, ini_get('yaf.environ'));
+                } else {
+                    $config = new Yaf_Config_Simple([]);
+                }
                 Yaf_Registry::set($key, $config);
             }
         } catch (Exception $exception) {
@@ -46,6 +57,42 @@ if (!function_exists('config')) {
         }
 
         return $config;
+    }
+}
+
+if (!function_exists('arrayConfig')) {
+
+    /**
+     * Get / set the specified configuration value.
+     *
+     * If an array is passed as the key, we will assume you want to set an array of values.
+     *
+     * @param string $namespace
+     * @return Yaf_Config_Simple
+     */
+    function arrayConfig($namespace = 'thirdParty')
+    {
+        return config($namespace);
+    }
+}
+
+if (!function_exists('dbConnect')) {
+
+    /**
+     * @param string $name
+     * @return mixed|\Yaf\Support\Database\PdoClient
+     * @throws Exception
+     */
+    function dbConnect($name = 'mysql')
+    {
+        $key = __METHOD__ . $name;
+        $pdo = Yaf_Registry::get($key);
+        if (!$pdo) {
+            $pdo = (new Database())->connect($name);
+            Yaf_Registry::set($key, $pdo);
+        }
+
+        return $pdo;
     }
 }
 

@@ -8,6 +8,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
 use ReflectionParameter;
+use Yaf\Support\Auth\AuthServiceProvider;
 use Yaf\Support\Exceptions\InvalidParameterException;
 use Psr\Container\ContainerInterface;
 
@@ -36,6 +37,8 @@ class Application extends Container implements ContainerInterface
             $this->setBasePath($basePath);
         }
 
+        $this->registerBaseServiceProviders();
+        
         parent::__construct($values);
     }
 
@@ -174,7 +177,15 @@ class Application extends Container implements ContainerInterface
      */
     public function getNamespaceConfigPath($namespace = 'application')
     {
-        return $this->configPath(Arr::get($this->configsFile, $namespace));
+        return $this->configPath(Arr::get($this->configsFile, $namespace, ''));
+    }
+
+    /**
+     * Register Base Provider
+     */
+    protected function registerBaseServiceProviders()
+    {
+        $this->register(new AuthServiceProvider());
     }
 
     /**

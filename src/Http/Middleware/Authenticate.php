@@ -3,7 +3,8 @@
 namespace Yaf\Support\Http\Middleware;
 
 use Closure;
-use Yaf\Support\Http\Request;
+use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Yaf\Support\Auth\AuthenticationException;
 
 /**
  * User Auth Middleware
@@ -13,10 +14,24 @@ use Yaf\Support\Http\Request;
 class Authenticate
 {
     /**
-     * @param Request $request
+     * @var \Illuminate\Contracts\Auth\Factory
+     */
+    protected $auth;
+
+    /**
+     * Authenticate constructor.
+     */
+    public function __construct()
+    {
+        $this->auth = app(AuthFactory::class);
+    }
+
+    /**
+     * @param         $request
      * @param Closure $next
      * @param array   ...$guards
      * @return mixed
+     * @throws AuthenticationException
      */
     public function handle($request, Closure $next, ...$guards)
     {
@@ -25,11 +40,26 @@ class Authenticate
         return $next($request);
     }
 
+    /**
+     * @param       $request
+     * @param array $guards
+     * @return bool
+     * @throws AuthenticationException
+     */
     protected function authenticate($request, array $guards)
     {
-        //do thing
-        var_dump('auth middleware');
+        if (empty($guards)) {
+            $guards = [null];
+        }
 
-        return true;
+        foreach ($guards as $guard) {
+            if ($this->auth->guard($guard)->check()) {
+                return $this->auth->shouldUse($guard);
+            }
+        }
+
+        throw new AuthenticationException(
+            'Unauthenticated.', $guards
+        );
     }
 }

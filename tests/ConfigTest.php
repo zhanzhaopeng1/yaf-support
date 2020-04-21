@@ -3,10 +3,9 @@
 namespace Yaf\Support\Test;
 require __DIR__ . '/../vendor/autoload.php';
 
-use PHPUnit\Framework\TestCase;
 use Yaf\Support\Foundation\Application;
 
-class ConfigTest extends TestCase
+class ConfigTest
 {
     public function testConfig()
     {
@@ -23,4 +22,34 @@ class ConfigTest extends TestCase
 
         var_dump(config('database')->db->payday->host);
     }
+
+    public function testSetConfig()
+    {
+        $app = new Application([], realpath(dirname(__FILE__)));
+        \Yaf_Registry::set('app', $app);
+
+        config()->test->test;
+
+        $res = arrayConfig();
+        $res->set('auth',[
+            'api' => [
+                'driver'   => 'token',
+                'provider' => 'users',
+                'hash'     => false,
+            ]
+        ]);
+
+        $res->set('auth123',[
+            'api' => [
+                'driver'   => 'token',
+                'provider' => 'users',
+                'hash'     => false,
+            ]
+        ]);
+
+        var_dump($res->get('auth123')->toArray());
+    }
 }
+
+$c = new ConfigTest();
+$c->testConfig();
