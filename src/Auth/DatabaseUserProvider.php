@@ -4,7 +4,6 @@ namespace Yaf\Support\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\Str;
 use Yaf\Support\Database\PdoClient;
 
@@ -31,15 +30,13 @@ class DatabaseUserProvider implements UserProvider
 
     /**
      * DatabaseUserProvider constructor.
-     * @param                $hasher
      * @param                $table
      * @throws \Exception
      */
-    public function __construct($hasher, $table)
+    public function __construct($table)
     {
-        $this->conn   = dbConnect();
-        $this->table  = $table;
-        $this->hasher = $hasher;
+        $this->conn  = dbConnect();
+        $this->table = $table;
     }
 
     /**
@@ -109,7 +106,7 @@ class DatabaseUserProvider implements UserProvider
 
             $condition = PdoClient::condition("{$key} = ?", $value);
             var_dump($condition);
-            $user      = dbConnect()->getRowByCondition('user', $condition);
+            $user = dbConnect()->getRowByCondition('user', $condition);
         }
 
 

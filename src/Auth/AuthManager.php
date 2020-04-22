@@ -31,11 +31,24 @@ class AuthManager implements FactoryContract
     protected $customCreators = [];
 
     /**
+     * The user resolver shared by various services.
+     *
+     * Determines the default user for Gate, Request, and the Authenticatable contract.
+     *
+     * @var \Closure
+     */
+    protected $userResolver;
+
+    /**
      * AuthManager constructor.
      */
     public function __construct()
     {
         $this->app = app();
+
+        $this->userResolver = function ($guard = null) {
+            return $this->guard($guard)->user();
+        };
     }
 
     /**
@@ -126,7 +139,13 @@ class AuthManager implements FactoryContract
      */
     public function shouldUse($name)
     {
-        // TODO: Implement shouldUse() method.
+        $name = $name ?: $this->getDefaultDriver();
+
+        $this->setDefaultDriver($name);
+
+        $this->userResolver = function ($name = null) {
+            return $this->guard($name)->user();
+        };
     }
 
     /**
@@ -138,6 +157,17 @@ class AuthManager implements FactoryContract
     protected function getConfig($name)
     {
         return arrayConfig()->auth->guards->{$name};
+    }
+
+    /**
+     * Set the default authentication driver name.
+     *
+     * @param  string $name
+     * @return void
+     */
+    public function setDefaultDriver($name)
+    {
+        arrayConfig()->auth->defaults->set('guard', $name);
     }
 
     /**

@@ -3,8 +3,6 @@
 namespace Yaf\Support\Http;
 
 use Yaf\Support\Foundation\Application;
-use Yaf\Support\Http\Middleware\Authenticate;
-use Yaf\Support\Http\Middleware\SignMiddleware;
 use Yaf\Support\Pipeline\Pipeline;
 
 class Kernel
@@ -21,10 +19,7 @@ class Kernel
      *
      * @var array
      */
-    protected $middleware = [
-        Authenticate::class,
-        SignMiddleware::class
-    ];
+    protected $middleware = [];
 
     public function __construct(Application $application)
     {
@@ -39,6 +34,12 @@ class Kernel
      */
     public function handle(Request $request)
     {
+        if ($middlewareList = $request->getMiddleware()) {
+            collect($middlewareList)->map(function ($middleware) {
+                $this->middleware[] = $middleware;
+            });
+        }
+
         return (new Pipeline($this->app))
             ->send($request)
             ->through($this->middleware)

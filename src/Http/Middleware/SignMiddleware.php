@@ -4,8 +4,9 @@ namespace Yaf\Support\Http\Middleware;
 
 use Closure;
 use Yaf\Support\Enums\ResultCodeEnum;
-use Yaf\Support\Exceptions\SignExceptions;
+use Yaf\Support\Exceptions\SignException;
 use Yaf\Support\Http\Request;
+use Yaf\Support\Sign\SignDispatcher;
 
 /**
  * Sign Middleware
@@ -18,13 +19,13 @@ class SignMiddleware
      * @param  Request $request
      * @param Closure  $next
      * @return mixed
-     * @throws SignExceptions
+     * @throws SignException
      */
     public function handle($request, Closure $next)
     {
         $signResult = $this->checkSign($request);
         if (!$signResult) {
-            throw new SignExceptions("sign failure", ResultCodeEnum::SIGN_FAILURE);
+            throw new SignException("sign failure", ResultCodeEnum::SIGN_FAILURE);
         }
 
         return $next($request);
@@ -36,8 +37,7 @@ class SignMiddleware
      */
     protected function checkSign($request)
     {
-        // do thing
-        var_dump('sign middleware');
+        SignDispatcher::distribute($request);
 
         return true;
     }

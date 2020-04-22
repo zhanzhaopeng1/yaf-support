@@ -48,7 +48,31 @@ class AuthMiddlewareTest
 
         var_dump($res);
     }
+
+    public function testMiddleware()
+    {
+        $app = new Application([], realpath(dirname(__FILE__)));
+        \Yaf_Registry::set('app', $app);
+
+        app()['request'] = function ($c) {
+            $request = new Request('test/test', 'base_uri/test/test');
+
+            $request->setMiddleware(['auth', 'sign']);
+
+            return $request;
+        };
+
+        app()[Kernel::class] = function ($c) {
+            return new Kernel($c);
+        };
+
+        arrayConfig()->set('auth', require __DIR__ . '/../src/Auth/config/auth.php');
+
+        $res = app(Kernel::class)->handle(app('request'));
+
+        var_dump($res);
+    }
 }
 
 $c = new AuthMiddlewareTest();
-$c->testAuthMiddleware();
+$c->testMiddleware();

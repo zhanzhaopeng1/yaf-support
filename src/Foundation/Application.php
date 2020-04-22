@@ -11,6 +11,7 @@ use ReflectionParameter;
 use Yaf\Support\Auth\AuthServiceProvider;
 use Yaf\Support\Exceptions\InvalidParameterException;
 use Psr\Container\ContainerInterface;
+use Yaf\Support\Http\Middleware\MiddlewareServiceProvider;
 
 class Application extends Container implements ContainerInterface
 {
@@ -38,7 +39,7 @@ class Application extends Container implements ContainerInterface
         }
 
         $this->registerBaseServiceProviders();
-        
+
         parent::__construct($values);
     }
 
@@ -186,6 +187,7 @@ class Application extends Container implements ContainerInterface
     protected function registerBaseServiceProviders()
     {
         $this->register(new AuthServiceProvider());
+        $this->register(new MiddlewareServiceProvider());
     }
 
     /**

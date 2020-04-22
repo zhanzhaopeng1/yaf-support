@@ -4,7 +4,7 @@ namespace Yaf\Support\Exceptions;
 
 use Exception;
 
-class SignExceptions extends Exception
+class SignException extends Exception
 {
 
 }

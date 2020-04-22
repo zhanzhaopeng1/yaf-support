@@ -62,7 +62,7 @@ trait CreatesUserProviders
      */
     protected function createDatabaseProvider($config)
     {
-        return new DatabaseUserProvider('hash', $config['table']);
+        return new DatabaseUserProvider($config['table']);
     }
 
     /**

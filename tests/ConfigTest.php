@@ -31,7 +31,7 @@ class ConfigTest
         config()->test->test;
 
         $res = arrayConfig();
-        $res->set('auth',[
+        $res->set('auth', [
             'api' => [
                 'driver'   => 'token',
                 'provider' => 'users',
@@ -39,7 +39,7 @@ class ConfigTest
             ]
         ]);
 
-        $res->set('auth123',[
+        $res->set('auth123', [
             'api' => [
                 'driver'   => 'token',
                 'provider' => 'users',
@@ -49,7 +49,23 @@ class ConfigTest
 
         var_dump($res->get('auth123')->toArray());
     }
+
+    public function testSetConfig1()
+    {
+        $res = arrayConfig();
+        $res->set('auth', [
+            'api' => [
+                'driver'   => 'token',
+                'provider' => 'users',
+                'hash'     => false,
+            ]
+        ]);
+
+        arrayConfig()->auth->api->set('driver','12345');
+
+        var_dump(arrayConfig()->auth);
+    }
 }
 
 $c = new ConfigTest();
-$c->testConfig();
+$c->testSetConfig1();
