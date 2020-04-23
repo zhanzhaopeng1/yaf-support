@@ -96,3 +96,20 @@ if (!function_exists('dbConnect')) {
     }
 }
 
+if (!function_exists('Auth')) {
+
+    /**
+     * @method int|null id()
+     * @method \Illuminate\Contracts\Auth\Authenticatable|null user()
+     *
+     * @see \Yaf\Support\Auth\AuthManager
+     * @see \Yaf\Support\Auth\TokenGuard
+     *
+     * @return \Yaf\Support\Auth\TokenGuard
+     */
+    function Auth()
+    {
+        return app(\Illuminate\Contracts\Auth\Factory::class);
+    }
+}
+

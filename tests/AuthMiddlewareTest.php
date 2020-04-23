@@ -56,8 +56,9 @@ class AuthMiddlewareTest
 
         app()['request'] = function ($c) {
             $request = new Request('test/test', 'base_uri/test/test');
-
-            $request->setMiddleware(['auth', 'sign']);
+            $request->setShouldMethod('any');
+            $request->setMiddleware(['auth']);
+            $request->setParam('api_token','12345678');
 
             return $request;
         };
@@ -71,6 +72,9 @@ class AuthMiddlewareTest
         $res = app(Kernel::class)->handle(app('request'));
 
         var_dump($res);
+
+        var_dump(Auth()->id());
+        var_dump(Auth()->user());
     }
 }
 

@@ -25,15 +25,12 @@ trait GuardHelpers
     protected $provider;
 
     /**
-     * Determine if current user is authenticated. If not, throw an exception.
-     *
-     * @return \Illuminate\Contracts\Auth\Authenticatable
-     *
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @return mixed
+     * @throws AuthenticationException
      */
     public function authenticate()
     {
-        if (! is_null($user = $this->user())) {
+        if (!is_null($user = $this->user())) {
             return $user;
         }
 
@@ -47,7 +44,7 @@ trait GuardHelpers
      */
     public function hasUser()
     {
-        return ! is_null($this->user);
+        return !is_null($this->user);
     }
 
     /**
@@ -57,7 +54,7 @@ trait GuardHelpers
      */
     public function check()
     {
-        return ! is_null($this->user());
+        return !is_null($this->user());
     }
 
     /**
@@ -67,7 +64,7 @@ trait GuardHelpers
      */
     public function guest()
     {
-        return ! $this->check();
+        return !$this->check();
     }
 
     /**
@@ -80,12 +77,14 @@ trait GuardHelpers
         if ($this->user()) {
             return $this->user()->getAuthIdentifier();
         }
+
+        return null;
     }
 
     /**
      * Set the current user.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable $user
      * @return $this
      */
     public function setUser(AuthenticatableContract $user)
@@ -108,7 +107,7 @@ trait GuardHelpers
     /**
      * Set the user provider used by the guard.
      *
-     * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
+     * @param  \Illuminate\Contracts\Auth\UserProvider $provider
      * @return void
      */
     public function setProvider(UserProvider $provider)

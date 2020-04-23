@@ -25,6 +25,11 @@ class Request extends \Yaf_Request_Http
     protected $sign = '';
 
     /**
+     * @var string
+     */
+    protected $shouldMethod = 'post';
+
+    /**
      * @return string
      */
     public function getMiddleware(): array
@@ -87,5 +92,21 @@ class Request extends \Yaf_Request_Http
     {
         $this->sign = $sign;
     }
-    
+
+    /**
+     * @return string
+     */
+    public function getShouldMethod(): string
+    {
+        return $this->shouldMethod;
+    }
+
+    /**
+     * @param string $shouldMethod
+     */
+    public function setShouldMethod(string $shouldMethod): void
+    {
+        $this->shouldMethod = $shouldMethod;
+    }
+
 }

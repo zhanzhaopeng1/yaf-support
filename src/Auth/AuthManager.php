@@ -180,4 +180,15 @@ class AuthManager implements FactoryContract
         return arrayConfig()->auth->defaults->guard;
     }
 
+    /**
+     * Dynamically call the default driver instance.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->guard()->{$method}(...$parameters);
+    }
 }

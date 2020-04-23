@@ -19,5 +19,9 @@ class MiddlewareServiceProvider implements ServiceProviderInterface
         $pimple['sign'] = function () {
             return new SignMiddleware();
         };
+
+        $pimple['router'] = function () {
+            return new RouterMiddleware();
+        };
     }
 }

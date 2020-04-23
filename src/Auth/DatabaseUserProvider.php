@@ -105,10 +105,8 @@ class DatabaseUserProvider implements UserProvider
             }
 
             $condition = PdoClient::condition("{$key} = ?", $value);
-            var_dump($condition);
             $user = dbConnect()->getRowByCondition('user', $condition);
         }
-
 
         return $this->getGenericUser($user);
     }

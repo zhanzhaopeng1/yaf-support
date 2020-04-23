@@ -3,6 +3,7 @@
 namespace Yaf\Support\Http;
 
 use Yaf\Support\Foundation\Application;
+use Yaf\Support\Http\Middleware\RouterMiddleware;
 use Yaf\Support\Pipeline\Pipeline;
 
 class Kernel
@@ -19,7 +20,9 @@ class Kernel
      *
      * @var array
      */
-    protected $middleware = [];
+    protected $middleware = [
+        'router'
+    ];
 
     public function __construct(Application $application)
     {
