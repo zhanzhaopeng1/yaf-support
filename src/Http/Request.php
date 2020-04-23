@@ -2,7 +2,9 @@
 
 namespace Yaf\Support\Http;
 
-class Request extends \Yaf_Request_Http
+use Yaf_Request_Http;
+
+class Request extends Yaf_Request_Http
 {
     /**
      * @var array request middleware
@@ -58,7 +60,11 @@ class Request extends \Yaf_Request_Http
      */
     public function setRawInput(string $rawInput): void
     {
-        $this->rawInput = $rawInput;
+        if ($rawInput) {
+            $this->rawInput = $rawInput;
+        } else {
+            $this->rawInput = file_get_contents('php://input');
+        }
     }
 
     /**
