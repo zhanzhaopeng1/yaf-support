@@ -32,6 +32,11 @@ class Request extends Yaf_Request_Http
     protected $shouldMethod = 'post';
 
     /**
+     * @var string
+     */
+    protected $ip = '';
+
+    /**
      * @return string
      */
     public function getMiddleware(): array
@@ -64,6 +69,18 @@ class Request extends Yaf_Request_Http
             $this->rawInput = $rawInput;
         } else {
             $this->rawInput = file_get_contents('php://input');
+        }
+    }
+
+    /**
+     * @param array $params
+     */
+    public function setParams(array $params)
+    {
+        if (empty($this->params)) {
+            $this->params = $params;
+        } else {
+            $this->params = array_merge($this->params, $params);
         }
     }
 
@@ -113,6 +130,42 @@ class Request extends Yaf_Request_Http
     public function setShouldMethod(string $shouldMethod): void
     {
         $this->shouldMethod = $shouldMethod;
+    }
+
+    /**
+     * @param bool $checkProxy
+     * @return string
+     */
+    public function getClientIp($checkProxy = true)
+    {
+        if ($this->ip) {
+            return $this->ip;
+        }
+
+        if ($checkProxy && ($ip = $this->getServer('HTTP_HFQ_CLIENT_IP')) != null) {
+            $ips = explode(',', $ip);
+            if (!empty($ips)) {
+                $ip = $ips[0];
+            }
+        }
+
+        if (!$ip && $checkProxy && ($ip = $this->getServer('HTTP_CLIENT_IP')) != null) {
+            $ips = explode(',', $ip);
+            if (!empty($ips)) {
+                $ip = $ips[0];
+            }
+        }
+
+        if (!$ip && $checkProxy && ($ip = $this->getServer('HTTP_X_FORWARDED_FOR')) != null) {
+            $ips = explode(',', $ip);
+            if (!empty($ips)) {
+                $ip = $ips[0];
+            }
+        }
+
+        $this->ip = $ip ?: $this->getServer('REMOTE_ADDR');
+
+        return $this->ip;
     }
 
 }

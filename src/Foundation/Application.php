@@ -12,6 +12,7 @@ use Yaf\Support\Auth\AuthServiceProvider;
 use Yaf\Support\Exceptions\InvalidParameterException;
 use Psr\Container\ContainerInterface;
 use Yaf\Support\Http\Middleware\MiddlewareServiceProvider;
+use Yaf\Support\Validation\ValidationServiceProvider;
 
 class Application extends Container implements ContainerInterface
 {
@@ -188,6 +189,7 @@ class Application extends Container implements ContainerInterface
     {
         $this->register(new AuthServiceProvider());
         $this->register(new MiddlewareServiceProvider());
+        $this->register(new ValidationServiceProvider());
     }
 
     /**

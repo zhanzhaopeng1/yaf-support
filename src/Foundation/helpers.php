@@ -113,3 +113,24 @@ if (!function_exists('Auth')) {
     }
 }
 
+if (!function_exists('request')) {
+
+    /**
+     * @return \Yaf\Support\Http\Request
+     */
+    function request()
+    {
+        return app('request');
+    }
+}
+
+if (!function_exists('validator')) {
+
+    /**
+     * @return \Yaf\Support\Validation\Validator
+     */
+    function validator()
+    {
+        return app('validator');
+    }
+}
