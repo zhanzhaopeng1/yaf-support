@@ -4,6 +4,7 @@ define('YAF_CONFIG_KEY', 'yaf_config_key');
 use Illuminate\Support\Str;
 use Yaf\Support\Database\Database;
 use Yaf\Support\Foundation\Application;
+use Yaf\Support\Log\Log;
 
 if (!function_exists('app')) {
     /**
@@ -132,5 +133,17 @@ if (!function_exists('validator')) {
     function validator()
     {
         return app('validator');
+    }
+}
+
+if (!function_exists('log_path')) {
+
+    /**
+     * @param $path
+     * @return string
+     */
+    function log_path($path)
+    {
+        return config()->log->dir . DIRECTORY_SEPARATOR . $path;
     }
 }
