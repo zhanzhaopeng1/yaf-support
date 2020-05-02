@@ -6,7 +6,7 @@ use Yaf_Response_Http;
 
 class Response extends Yaf_Response_Http
 {
-    public function jsonReturn(array $data, string $message = '成功', int $code = 0, int $httpCode = 200)
+    public function jsonReturn(array $data, string $message = 'success', int $code = 0, int $httpCode = 200)
     {
         $content = [
             'code'    => $code,
