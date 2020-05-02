@@ -33,34 +33,34 @@ return [
         'handlers' => [
             [
                 // 日志文件名
-                'file'        => log_path('{date:Ymd}/log_' . config()->APP_NAME . '_app_{date:YmdH}.log'),
-                // 是否是脚本日志
-                'isCron'      => false,
+                'file'           => log_path('{date:Ymd}/log_' . config()->APP_NAME . '_app_{date:YmdH}.log'),
                 // 日志 level 范围
-                'minLevel'    => LogLevel::DEBUG,
-                'maxLevel'    => LogLevel::NOTICE,
+                'minLevel'       => LogLevel::DEBUG,
+                'maxLevel'       => LogLevel::NOTICE,
                 // 打开缓冲
-                'bufferLimit' => 128,
+                'bufferLimit'    => 128,
+                // cli 模式下的日志 buffer
+                'cliBufferLimit' => 5,
                 // 日志格式化规范
-                'formatter'   => "[%datetime%] %level_name%: %message% %context% %extra%\n",
+                'formatter'      => "[%datetime%] %level_name%: %message% %context% %extra%\n",
                 // 日志处理器
-                'processors'  => [
+                'processors'     => [
                 ],
             ],
             [
                 // 日志文件名
-                'file'        => log_path('{date:Ymd}/log_' . config()->APP_NAME . '_app_error_{date:YmdH}.log'),
-                // 是否是脚本日志
-                'isCron'      => false,
+                'file'           => log_path('{date:Ymd}/log_' . config()->APP_NAME . '_app_error_{date:YmdH}.log'),
                 // 日志 level 范围
-                'minLevel'    => LogLevel::WARNING,
-                'maxLevel'    => LogLevel::ERROR,
+                'minLevel'       => LogLevel::WARNING,
+                'maxLevel'       => LogLevel::ERROR,
                 // 打开缓冲
-                'bufferLimit' => 128,
+                'bufferLimit'    => 128,
+                // cli 模式下的日志 buffer
+                'cliBufferLimit' => 5,
                 // 日志格式化规范
-                'formatter'   => "[%datetime%] %level_name%: %message% %context% %extra%\n",
+                'formatter'      => "[%datetime%] %level_name%: %message% %context% %extra%\n",
                 // 日志处理器
-                'processors'  => [
+                'processors'     => [
                 ],
             ],
         ],

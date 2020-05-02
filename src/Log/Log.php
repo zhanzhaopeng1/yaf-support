@@ -61,16 +61,18 @@ class Log
         $minLevel = Logger::toMonologLevel($config['minLevel']);
         $maxLevel = Logger::toMonologLevel($config['maxLevel']);
 
-        $handler = new StreamHandler($config['file'], $config['isCron'], $config['bufferLimit']);
+        $handler = new StreamHandler($config['file'], $config['cliBufferLimit']);
 
         // 设置规范
         if ($config['formatter']) {
             $handler->setFormatter(new LineFormatter($config['formatter'], 'Y-m-d H:i:s'));
         }
 
+        $bufferLimit = request()->isCli() ? $config['cliBufferLimit'] : $config['bufferLimit'];
+
         // 支持 buffer
-        if ($config['bufferLimit'] > 0) {
-            $handler = new BufferHandler($handler, $config['bufferLimit'], Logger::DEBUG, true, true);
+        if ($bufferLimit) {
+            $handler = new BufferHandler($handler, $bufferLimit, Logger::DEBUG, true, true);
         }
 
         // 错误定义范围

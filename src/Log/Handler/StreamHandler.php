@@ -5,10 +5,26 @@ namespace Yaf\Support\Log\Handler;
 use Monolog\Handler\StreamHandler as BaseStreamHandler;
 use Monolog\Logger;
 
+/**
+ * Class StreamHandler
+ * @package Yaf\Support\Log\Handler
+ */
 class StreamHandler extends BaseStreamHandler
 {
+    /**
+     * @var string
+     */
     const PLACEHOLDER_FILENAME = 'placeholder';
-    const DEFAULT_DATE_FORMAT  = 'Y-m-d';
+
+    /**
+     * @var string
+     */
+    const DEFAULT_DATE_FORMAT = 'Y-m-d';
+
+    /**
+     * @var int $cliBufferLimit 定时脚本buffer限制
+     */
+    protected $cliBufferLimit = 5;
 
     /**
      * @var string $filename
@@ -36,48 +52,42 @@ class StreamHandler extends BaseStreamHandler
     protected $hasFormat = false;
 
     /**
-     * @var bool $isCron
+     * @var bool $isCli
      */
-    protected $isCron = false;
-
-    /**
-     * @var int $bufferLimit
-     */
-    protected $bufferLimit = -1;
+    protected $isCli = false;
 
     /**
      * @var int $writeFrequency 写日志的次数
      */
-    protected $writeFrequency = 0;
+    protected $writeFrequency = -1;
 
     /**
      * StreamHandler constructor.
      * @param          $stream
-     * @param bool     $isCron 是否是cron 脚本日志要每次都格式化文件
-     * @param int      $bufferLimit
+     * @param int      $cliBufferLimit
      * @param int      $level
      * @param bool     $bubble
      * @param int|null $filePermission
      * @param bool     $useLocking
      */
-    public function __construct($stream, bool $isCron = false, int $bufferLimit = -1, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
+    public function __construct($stream, int $cliBufferLimit, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
     {
         $this->fileAbsolutePath = $stream;
-        $this->isCron           = $isCron;
-        $this->bufferLimit      = $bufferLimit;
+        $this->isCli            = request()->isCli();
+        $this->cliBufferLimit   = $cliBufferLimit;
 
         parent::__construct($stream, $level, $bubble, $filePermission, $useLocking);
     }
 
     protected function write(array $record): void
     {
-        $this->writeFrequency += 1;
+        $this->writeFrequency++;
 
         /**
          * 脚本或者定时 要每次都格式化文件  防止都写到同一个文件中 导致文件过大
          */
-        if (($this->isCron && $this->bufferLimit <= 0)
-            || ($this->isCron && $this->bufferLimit > 0 && $this->writeFrequency == $this->bufferLimit)
+        if (($this->isCli && $this->cliBufferLimit <= 0)
+            || ($this->isCli && $this->cliBufferLimit > 0 && $this->writeFrequency == $this->cliBufferLimit)
             || !$this->hasFormat) {
             $fileInfo       = $this->parseLogFile($this->fileAbsolutePath);
             $this->filename = $fileInfo['file'];
@@ -91,10 +101,11 @@ class StreamHandler extends BaseStreamHandler
         /**
          * 定时任务每写一次要关闭一次文件
          */
-        if ($this->isCron) {
-            if ($this->bufferLimit > 0 && $this->writeFrequency == $this->bufferLimit) {
+        if ($this->isCli) {
+            if ($this->cliBufferLimit > 0 && $this->writeFrequency == $this->cliBufferLimit) {
+                $this->writeFrequency = -1;
                 $this->close();
-            } elseif ($this->bufferLimit <= 0) {
+            } elseif ($this->cliBufferLimit <= 0) {
                 $this->close();
             }
         }
