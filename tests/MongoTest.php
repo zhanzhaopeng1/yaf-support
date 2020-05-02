@@ -3,6 +3,7 @@
 namespace Yaf\Support\Test;
 
 use Yaf\Support\Foundation\Application;
+use Yaf\Support\Http\Request;
 use Yaf\Support\Log\Log;
 use Yaf\Support\Log\ServiceProvider;
 
@@ -34,9 +35,11 @@ class MongoTest
         $app = new Application([], realpath(dirname(__FILE__)));
         \Yaf_Registry::set('app', $app);
 
-        (new ServiceProvider())->boot();
+        app()['request'] = function ($c) {
+            return new Request('cli', 'cli');
+        };
 
-         arrayConfig()->set('logging', require __DIR__ . '/configs/Logging.php');
+        (new ServiceProvider())->boot();
 
         Log::debug('debug log');
         Log::info('info log');
@@ -44,13 +47,20 @@ class MongoTest
         Log::error('error log');
         Log::warning('warring log');
 
-        sleep(10);
-
         Log::debug('debug log1');
         Log::info('info log1');
         Log::notice('notice log1');
         Log::error('error log1');
         Log::warning('warring log1');
+
+        Log::debug('debug log1');
+        Log::info('info log1');
+        Log::notice('notice log1');
+        Log::notice('notice log1....');
+        Log::error('error log1');
+        Log::warning('warring log1');
+
+        sleep(2);
 
     }
 }
