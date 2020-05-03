@@ -29,7 +29,6 @@
     "require": {
         "illuminate/pipeline": "^7.6",
         "pimple/pimple": "^3.3@dev",
-        "phpunit/phpunit": "8.5.x-dev",
         "monolog/monolog": "^2.0@dev"
     }
 }
