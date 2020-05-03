@@ -57,13 +57,17 @@ class Request extends Yaf_Request_Http
      */
     public function getRawInput(): string
     {
+        if (empty($this->rawInput)) {
+            $this->setRawInput();
+        }
+
         return $this->rawInput;
     }
 
     /**
      * @param string $rawInput
      */
-    public function setRawInput(string $rawInput): void
+    public function setRawInput(string $rawInput = ''): void
     {
         if ($rawInput) {
             $this->rawInput = $rawInput;

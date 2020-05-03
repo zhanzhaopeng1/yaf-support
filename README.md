@@ -104,6 +104,20 @@ laravel  框架代码优美，整洁，周边丰富，可扩展性强；但框�
          };
 ``````
 
+*校验器(validation)
+>>>参考laravel的校验器来做参数的校验，但校验类型与laravel相比较少，具体读源码
+``````PHP
+         validator()->validate([
+              'age'  => 'required|int|between:1,100',
+              'name' => 'required|string'
+         ]);
+         
+         $age  = request()->getParam('age');
+         $name = request()->getParam('name', 'test');
+         var_dump($age);
+         var_dump($name);
+``````
+
 *日志(monolog)
 >>>完全复用monolog来做为此版本的日志记录工具，以天为单位，每小时记录所有的请求日志，具体代码需要根据实际
 项目去配置，本处不做过多讲解。
