@@ -24,6 +24,11 @@ class AuthServiceProvider implements ServiceProviderInterface
         $this->registerAuthenticator();
     }
 
+    public function boot()
+    {
+        arrayConfig()->set('auth', require __DIR__ . '/config/auth.php');
+    }
+
     /**
      * Register the authenticator services.
      *
@@ -35,10 +40,5 @@ class AuthServiceProvider implements ServiceProviderInterface
 
             return new AuthManager();
         };
-    }
-
-    protected function boot()
-    {
-        arrayConfig()->set('auth', require __DIR__ . '/config/auth.php');
     }
 }

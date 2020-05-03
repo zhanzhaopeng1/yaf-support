@@ -193,6 +193,14 @@ class Application extends Container implements ContainerInterface
     }
 
     /**
+     * @param $serviceProvider
+     */
+    public function boot($serviceProvider)
+    {
+        $serviceProvider->boot();
+    }
+
+    /**
      * Finds an entry of the container by its identifier and returns it.
      *
      * @param string $id Identifier of the entry to look for.
