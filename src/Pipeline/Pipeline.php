@@ -143,7 +143,7 @@ class Pipeline implements PipelineContracts
         return function ($stack, $pipe) {
             return function ($passable) use ($stack, $pipe) {
                 try {
-                    if (is_callable($pipe)) {
+                    if (is_callable($pipe) && !is_string($pipe)) {
                         // If the pipe is a callable, then we will call it directly, but otherwise we
                         // will resolve the pipes out of the dependency container and call it with
                         // the appropriate method and arguments, returning the results back out.

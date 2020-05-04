@@ -38,7 +38,7 @@ class Kernel
     public function handle(Request $request)
     {
         if ($middlewareList = $request->getMiddleware()) {
-            collect($middlewareList)->map(function ($middleware) {
+            collect($middlewareList)->filter()->unique()->values()->map(function ($middleware) {
                 $this->middleware[] = $middleware;
             });
         }
